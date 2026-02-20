@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Money Muling Detection System - Professional Fraud Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #030303;
+            color: #F1EFEC;
+            min-height: 100vh;
+        }
+
+        nav {
+            background: rgba(3, 3, 3, 0.95);
+            border-bottom: 1px solid #D4C9BE;
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 16px 0;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #D4C9BE 0%, #F1EFEC 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        nav a {
+            color: #D4C9BE;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.4s ease;
+        }
+
+        nav a:hover {
+            color: #F1EFEC;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .header {
+            padding: 60px 0;
+            text-align: center;
+            background: linear-gradient(135deg, #123458 0%, #030303 100%);
+            border-bottom: 1px solid #D4C9BE;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #D4C9BE 0%, #F1EFEC 50%, #123458 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #D4C9BE;
+            margin-bottom: 8px;
+        }
+
+        .header .feature-badges {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(212, 201, 190, 0.1);
+            border: 1px solid #D4C9BE;
+            color: #F1EFEC;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            transition: all 0.4s ease;
+        }
+
+        .badge:hover {
+            box-shadow: 0 8px 20px rgba(212, 201, 190, 0.2);
+        }
+
+        .main {
+            padding: 48px 0;
+        }
+
+        .upload-section {
+            background: linear-gradient(135deg, #123458 0%, #030303 100%);
+            border: 1px solid #D4C9BE;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+            transition: all 0.4s ease;
+        }
+
+        .upload-section:hover {
+            box-shadow: 0 20px 50px rgba(212, 201, 190, 0.15);
+        }
+
+        .upload-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: #F1EFEC;
+        }
+
+        .upload-section p {
+            color: #D4C9BE;
+            margin-bottom: 28px;
+        }
+
+        .upload-area {
+            background: linear-gradient(135deg, #030303 0%, #123458 100%);
+            border: 2px dashed #D4C9BE;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            border-color: #F1EFEC;
+            background: linear-gradient(135deg, #123458 0%, #030303 100%);
+            box-shadow: 0 12px 30px rgba(212, 201, 190, 0.15);
+        }
+
+        .upload-area.dragover {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .upload-area-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        .upload-area p {
+            color: #D4C9BE;
+            margin-bottom: 8px;
+        }
+
+        .upload-area .highlight {
+            color: #F1EFEC;
+            font-weight: 600;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #D4C9BE 0%, #F1EFEC 100%);
+            color: #030303;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(212, 201, 190, 0.3);
+        }
+
+        .btn-secondary {
+            background: #123458;
+            color: #F1EFEC;
+            border: 1px solid #D4C9BE;
+        }
+
+        .btn-secondary:hover {
+            background: #030303;
+            box-shadow: 0 8px 20px rgba(212, 201, 190, 0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .file-info {
+            background: #123458;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            color: #D4C9BE;
+            display: none;
+            border: 1px solid #D4C9BE;
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            color: #86efac;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .progress-bar-container {
+            margin-top: 16px;
+            background: #123458;
+            border-radius: 9999px;
+            height: 6px;
+            overflow: hidden;
+            display: none;
+            box-shadow: inset 0 2px 8px rgba(212, 201, 190, 0.1);
+        }
+
+        .progress-bar-container.show {
+            display: block;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #D4C9BE, #F1EFEC, #D4C9BE);
+            border-radius: 9999px;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+
+        .tabs-container {
+            margin-top: 40px;
+            display: none;
+        }
+
+        .tabs-container.show {
+            display: block;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid #D4C9BE;
+            margin-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 16px 24px;
+            background: none;
+            border: none;
+            color: #D4C9BE;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: all 0.4s ease;
+        }
+
+        .tab-btn.active {
+            color: #F1EFEC;
+            border-bottom-color: #F1EFEC;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .results-section {
+            background: linear-gradient(135deg, #123458 0%, #030303 100%);
+            border: 1px solid #D4C9BE;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+            margin-bottom: 40px;
+        }
+
+        .results-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 24px;
+            color: #F1EFEC;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #030303 0%, #123458 100%);
+            border: 1px solid #D4C9BE;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .summary-card:hover {
+            border-color: #F1EFEC;
+            box-shadow: 0 12px 30px rgba(212, 201, 190, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .summary-card.suspicious {
+            border-color: #f97316;
+        }
+
+        .summary-card.suspicious:hover {
+            box-shadow: 0 12px 30px rgba(249, 115, 22, 0.2);
+        }
+
+        .summary-card.fraud {
+            border-color: #ef4444;
+        }
+
+        .summary-card.fraud:hover {
+            box-shadow: 0 12px 30px rgba(239, 68, 68, 0.2);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+        }
+
+        .card-content {
+            flex: 1;
+        }
+
+        .card-content h4 {
+            font-size: 0.75rem;
+            color: #D4C9BE;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        .fraud-rings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .ring-card {
+            background: linear-gradient(135deg, #030303 0%, #123458 100%);
+            border: 1px solid #D4C9BE;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .ring-card:hover {
+            border-color: #F1EFEC;
+            box-shadow: 0 12px 30px rgba(212, 201, 190, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .ring-card.high-risk {
+            border-left: 4px solid #ef4444;
+        }
+
+        .ring-card.medium-risk {
+            border-left: 4px solid #f97316;
+        }
+
+        .ring-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .ring-id {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .pattern-badge {
+            background: linear-gradient(135deg, #123458 0%, #030303 100%);
+            color: #F1EFEC;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-weight: 600;
+            border: 1px solid #D4C9BE;
+            transition: all 0.3s ease;
+        }
+
+        .risk-score {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #D4C9BE;
+        }
+
+        .risk-label {
+            color: #D4C9BE;
+        }
+
+        .risk-value {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .risk-value.high {
+            color: #ef4444;
+        }
+
+        .risk-value.medium {
+            color: #f97316;
+        }
+
+        .members-section {
+            margin-top: 12px;
+        }
+
+        .members-label {
+            display: block;
+            color: #D4C9BE;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .members-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .member-badge {
+            background: linear-gradient(135deg, #123458 0%, #030303 100%);
+            border: 1px solid #D4C9BE;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-family: monospace;
+            transition: all 0.3s ease;
+        }
+
+        .accounts-table {
+            border: 1px solid #D4C9BE;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #030303;
+        }
+
+        .table-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            background: linear-gradient(135deg, #123458 0%, #030303 100%);
+            border: 1px solid #D4C9BE;
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #F1EFEC;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #F1EFEC;
+            box-shadow: 0 0 15px rgba(212, 201, 190, 0.2);
+        }
+
+        .table-header,
+        .table-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 2fr 1.5fr;
+            padding: 14px 16px;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, #123458 0%, #030303 100%);
+            color: #D4C9BE;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+        }
+
+        .table-row {
+            border-top: 1px solid #D4C9BE;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .table-row:hover {
+            background: rgba(212, 201, 190, 0.05);
+            box-shadow: inset 0 0 10px rgba(212, 201, 190, 0.1);
+        }
+
+        code {
+            font-family: 'Monaco', 'Courier New', monospace;
+            background: rgba(212, 201, 190, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #F1EFEC;
+        }
+
+        .score-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-weight: 600;
+            color: white;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .score-badge.high {
+            background: #ef4444;
+        }
+
+        .score-badge.medium {
+            background: #f97316;
+        }
+
+        .score-badge.low {
+            background: #fbbf24;
+        }
+
+        .pattern-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #123458 0%, #030303 100%);
+            color: #F1EFEC;
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 6px;
+            margin: 2px;
+            border: 1px solid #D4C9BE;
+            transition: all 0.3s ease;
+        }
+
+        .table-footer {
+            padding: 16px;
+            text-align: center;
+            color: #D4C9BE;
+            font-size: 0.9rem;
+            border-top: 1px solid #D4C9BE;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: #D4C9BE;
+            margin-bottom: 24px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-item {
+            background: linear-gradient(135deg, #030303 0%, #123458 100%);
+            border: 1px solid #D4C9BE;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .stat-item:hover {
+            box-shadow: 0 8px 20px rgba(212, 201, 190, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .stat-label {
+            color: #D4C9BE;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #F1EFEC;
+        }
+
+        .actions-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        footer {
+            background: rgba(3, 3, 3, 0.8);
+            border-top: 1px solid #D4C9BE;
+            padding: 40px 0;
+            margin-top: 60px;
+            color: #D4C9BE;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #D4C9BE;
+            text-decoration: none;
+            transition: color 0.4s ease;
+        }
+
+        .footer-links a:hover {
+            color: #F1EFEC;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(212, 201, 190, 0.2);
+            border-radius: 50%;
+            border-top-color: #F1EFEC;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            nav .nav-links {
+                gap: 16px;
+            }
+
+            .table-header,
+            .table-row {
+                grid-template-columns: 1fr;
+            }
+
+            .table-header {
+                display: none;
+            }
+
+            .table-row {
+                background: linear-gradient(135deg, #030303 0%, #123458 100%);
+                border: 1px solid #D4C9BE;
+                border-radius: 8px;
+                margin-bottom: 12px;
+            }
+
+            .upload-section,
+            .results-section {
+                padding: 24px;
+            }
+
+            .summary-cards {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .fraud-rings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="container">
+            <div class="logo">💰 Money Muling Detection</div>
+            <ul class="nav-links">
+                <li><a href="#upload">Upload</a></li>
+                <li><a href="#results">Results</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="header">
+        <div class="container">
+            <h1>Money Muling Detection System</h1>
+            <p>Advanced Fraud Detection & Analysis Platform</p>
+            <p style="font-size: 0.95rem; margin-top: 12px;">Using Graph Analysis & Network Intelligence</p>
+            <div class="feature-badges">
+                <div class="badge">🔍 Real-time Analysis</div>
+                <div class="badge">🧠 AI-Powered Detection</div>
+                <div class="badge">📊 Advanced Reporting</div>
+                <div class="badge">🔗 Network Mapping</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="container">
+            <section class="upload-section" id="upload">
+                <h2>📤 Upload Transaction Data</h2>
+                <p>Analyze your transaction records for fraudulent money muling patterns</p>
+
+                <div id="errorMessage" class="error-message"></div>
+                <div id="successMessage" class="success-message"></div>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-area-icon">📁</div>
+                    <p>Drag and drop your CSV file here, or <span class="highlight">click to browse</span></p>
+                    <p style="font-size: 0.85rem; color: #D4C9BE; margin-top: 8px;">CSV Format: transaction_id, sender_id, receiver_id, amount, timestamp</p>
+                </div>
+                <input type="file" id="fileInput" class="file-input" accept=".csv" />
+
+                <div class="file-info" id="fileInfo">
+                    <span id="fileName"></span>
+                </div>
+
+                <div class="progress-bar-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" id="analyzeBtn" disabled>
+                        <span class="spinner" id="spinner" style="display:none; margin-right: 8px;"></span>
+                        🚀 Analyze Transactions
+                    </button>
+                    <button class="btn btn-secondary" id="downloadTemplateBtn">
+                        📥 Download CSV Template
+                    </button>
+                </div>
+            </section>
+
+            <section id="resultsSection" style="display: none;">
+                <div class="tabs-container show" id="tabsContainer">
+                    <div class="tabs-header">
+                        <button class="tab-btn active" data-tab="overview">📊 Overview</button>
+                        <button class="tab-btn" data-tab="rings">🔗 Fraud Rings</button>
+                        <button class="tab-btn" data-tab="accounts">👤 Suspicious Accounts</button>
+                        <button class="tab-btn" data-tab="statistics">📈 Statistics</button>
+                    </div>
+
+                    <div class="tab-content active" data-tab="overview">
+                        <div class="results-section">
+                            <h3>📊 Analysis Summary</h3>
+
+                            <div class="actions-bar">
+                                <button class="btn btn-primary" id="downloadJsonBtn">⬇️ Download Results (JSON)</button>
+                                <button class="btn btn-secondary" id="downloadCsvBtn">⬇️ Download Accounts (CSV)</button>
+                                <button class="btn btn-secondary" id="shareBtn">🔗 Share Results</button>
+                            </div>
+
+                            <div class="summary-cards">
+                                <div class="summary-card">
+                                    <div class="card-icon">🏦</div>
+                                    <div class="card-content">
+                                        <h4>Total Accounts</h4>
+                                        <div class="card-value" id="totalAccounts">—</div>
+                                    </div>
+                                </div>
+                                <div class="summary-card suspicious">
+                                    <div class="card-icon">⚠️</div>
+                                    <div class="card-content">
+                                        <h4>Suspicious Accounts</h4>
+                                        <div class="card-value" id="suspiciousCount">—</div>
+                                    </div>
+                                </div>
+                                <div class="summary-card fraud">
+                                    <div class="card-icon">🚨</div>
+                                    <div class="card-content">
+                                        <h4>Fraud Rings</h4>
+                                        <div class="card-value" id="fraudRingsCount">—</div>
+                                    </div>
+                                </div>
+                                <div class="summary-card">
+                                    <div class="card-icon">⏱️</div>
+                                    <div class="card-content">
+                                        <h4>Processing Time</h4>
+                                        <div class="card-value" id="processingTime">—</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="riskAssessment" style="margin-top: 32px;"></div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" data-tab="rings">
+                        <div class="results-section">
+                            <h3>🔗 Detected Fraud Rings</h3>
+                            <p style="color: #D4C9BE; margin-bottom: 20px;">Networks of accounts involved in suspicious money transfer patterns</p>
+                            <div class="fraud-rings-grid" id="fraudRingsGrid"></div>
+                            <div id="noRingsMessage" class="empty-state" style="display: none;">
+                                <div class="empty-state-icon">✅</div>
+                                <h3>No Fraud Rings Detected</h3>
+                                <p>This transaction dataset appears to be clean</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" data-tab="accounts">
+                        <div class="results-section">
+                            <h3>👤 Flagged Suspicious Accounts</h3>
+                            <p style="color: #D4C9BE; margin-bottom: 20px;" id="accountsDescription"></p>
+
+                            <div class="table-controls">
+                                <input type="text" class="search-box" id="accountsSearch" placeholder="🔍 Search account ID...">
+                                <select class="search-box" id="riskFilter" style="flex: 0 0 200px;">
+                                    <option value="">All Risk Levels</option>
+                                    <option value="high">🔴 High Risk (&gt;90%)</option>
+                                    <option value="medium">🟠 Medium Risk (70-90%)</option>
+                                    <option value="low">🟡 Low Risk (&lt;70%)</option>
+                                </select>
+                            </div>
+
+                            <div class="accounts-table">
+                                <div class="table-header">
+                                    <div>Account ID</div>
+                                    <div>Risk Score</div>
+                                    <div>Detected Patterns</div>
+                                    <div>Associated Ring</div>
+                                </div>
+                                <div id="accountsTableBody"></div>
+                                <div id="tableFooter" class="table-footer" style="display: none;"></div>
+                            </div>
+                            <div id="noAccountsMessage" class="empty-state" style="display: none;">
+                                <div class="empty-state-icon">✅</div>
+                                <h3>No Suspicious Accounts</h3>
+                                <p>All accounts appear legitimate</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" data-tab="statistics">
+                        <div class="results-section">
+                            <h3>📈 Detailed Statistics</h3>
+
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-label">Detection Rate</div>
+                                    <div class="stat-value" id="detectionRate">—</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Avg Risk Score</div>
+                                    <div class="stat-value" id="avgRiskScore">—</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Highest Risk Account</div>
+                                    <div class="stat-value" id="highestRisk">—</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Most Common Pattern</div>
+                                    <div class="stat-value" id="commonPattern">—</div>
+                                </div>
+                            </div>
+
+                            <div style="background: linear-gradient(135deg, #030303 0%, #123458 100%); border: 1px solid #D4C9BE; border-radius: 12px; padding: 24px; margin-top: 24px; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);">
+                                <h4 style="margin-bottom: 16px; color: #F1EFEC;">Pattern Breakdown</h4>
+                                <div id="patternBreakdown"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer id="about">
+        <div class="container">
+            <div class="footer-links">
+                <a href="#upload">Upload Data</a>
+                <a href="#results">View Results</a>
+                <a href="#">Documentation</a>
+                <a href="#">API Reference</a>
+                <a href="#">Contact Support</a>
+            </div>
+            <p>💡 Money Muling Detection System v2.0 Professional Edition</p>
+            <p style="margin-top: 12px; color: #D4C9BE;">Powered by Advanced Graph Analysis & Machine Intelligence</p>
+            <p style="margin-top: 16px; color: #D4C9BE; font-size: 0.85rem;">Made by Dhruv Kashyap, Manomay, Kashik Ojha</p>
+        </div>
+    </footer>
+
+    <script>
+        let selectedFile = null;
+        let resultsData = null;
+        let filteredAccounts = null;
+
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const spinner = document.getElementById('spinner');
+        const resultsSection = document.getElementById('resultsSection');
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            handleFile(e.dataTransfer.files[0]);
+        });
+
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        analyzeBtn.addEventListener('click', uploadAndAnalyze);
+
+        document.getElementById('downloadTemplateBtn').addEventListener('click', downloadTemplate);
+        document.getElementById('downloadJsonBtn').addEventListener('click', () => downloadResults('json'));
+        document.getElementById('downloadCsvBtn').addEventListener('click', () => downloadResults('csv'));
+        document.getElementById('shareBtn').addEventListener('click', shareResults);
+
+        document.getElementById('accountsSearch').addEventListener('input', filterAccounts);
+        document.getElementById('riskFilter').addEventListener('change', filterAccounts);
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+        });
+
+        function handleFile(file) {
+            if (file && file.name.endsWith('.csv')) {
+                selectedFile = file;
+                fileName.textContent = `📄 ${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
+                fileInfo.classList.add('show');
+                analyzeBtn.disabled = false;
+                hideError();
+            } else {
+                selectedFile = null;
+                fileInfo.classList.remove('show');
+                analyzeBtn.disabled = true;
+                showError('Please select a valid CSV file');
+            }
+        }
+
+        function showError(msg) {
+            errorMessage.textContent = '❌ ' + msg;
+            errorMessage.classList.add('show');
+            setTimeout(() => errorMessage.classList.remove('show'), 5000);
+        }
+
+        function showSuccess(msg) {
+            successMessage.textContent = '✅ ' + msg;
+            successMessage.classList.add('show');
+            setTimeout(() => successMessage.classList.remove('show'), 5000);
+        }
+
+        function hideError() {
+            errorMessage.classList.remove('show');
+        }
+
+        function setProgress(pct) {
+            progressBar.style.width = pct + '%';
+        }
+
+        async function uploadAndAnalyze() {
+            if (!selectedFile) {
+                showError('Please select a file first');
+                return;
+            }
+
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = '🔄 Analyzing...';
+            spinner.style.display = 'inline-block';
+            hideError();
+            progressContainer.classList.add('show');
+            setProgress(10);
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            try {
+                const response = await fetch('http://localhost:5500/api/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                setProgress(70);
+
+                if (!response.ok) {
+                    const errData = await response.json();
+                    throw new Error(errData.error || `Server error: ${response.status}`);
+                }
+
+                resultsData = await response.json();
+                filteredAccounts = resultsData.suspicious_accounts;
+                setProgress(100);
+
+                setTimeout(() => {
+                    renderResults();
+                    resultsSection.style.display = 'block';
+                    resultsSection.scrollIntoView({ behavior: 'smooth' });
+                    showSuccess('Analysis complete!');
+                }, 300);
+
+            } catch (err) {
+                showError(err.message || 'An error occurred');
+            } finally {
+                analyzeBtn.disabled = false;
+                analyzeBtn.textContent = '🚀 Analyze Transactions';
+                spinner.style.display = 'none';
+                setTimeout(() => progressContainer.classList.remove('show'), 500);
+            }
+        }
+
+        function renderResults() {
+            const summary = resultsData.summary;
+
+            document.getElementById('totalAccounts').textContent = summary.total_accounts_analyzed;
+            document.getElementById('suspiciousCount').textContent = summary.suspicious_accounts_flagged;
+            document.getElementById('fraudRingsCount').textContent = summary.fraud_rings_detected;
+            document.getElementById('processingTime').textContent = summary.processing_time_seconds + 's';
+
+            const riskAssessment = document.getElementById('riskAssessment');
+            const riskLevel = summary.fraud_rings_detected > 5 ? '🔴 CRITICAL' :
+                summary.fraud_rings_detected > 2 ? '🟠 HIGH' :
+                    summary.fraud_rings_detected > 0 ? '🟡 MEDIUM' : '🟢 LOW';
+            riskAssessment.innerHTML = `
+            <div style="background: linear-gradient(135deg, #123458 0%, #030303 100%); border: 1px solid #D4C9BE; border-radius: 12px; padding: 24px; text-align: center; box-shadow: 0 12px 30px rgba(212, 201, 190, 0.15);">
+                <div style="font-size: 2rem; margin-bottom: 12px;">${riskLevel}</div>
+                <div style="color: #D4C9BE; font-size: 0.9rem;">Overall Risk Assessment</div>
+            </div>
+        `;
+
+            renderFraudRings();
+            document.getElementById('accountsDescription').textContent =
+                `${summary.suspicious_accounts_flagged} accounts flagged across ${summary.fraud_rings_detected} detected rings`;
+            renderAccounts();
+            renderStatistics();
+        }
+
+        function renderFraudRings() {
+            const grid = document.getElementById('fraudRingsGrid');
+            const noRingsMsg = document.getElementById('noRingsMessage');
+
+            if (resultsData.fraud_rings.length === 0) {
+                grid.innerHTML = '';
+                noRingsMsg.style.display = 'block';
+                return;
+            }
+
+            noRingsMsg.style.display = 'none';
+            grid.innerHTML = resultsData.fraud_rings.map(ring => {
+                const riskClass = ring.risk_score > 90 ? 'high-risk' : 'medium-risk';
+                const riskColor = ring.risk_score > 90 ? 'high' : 'medium';
+                return `
+                <div class="ring-card ${riskClass}">
+                    <div class="ring-header">
+                        <div class="ring-id">${ring.ring_id}</div>
+                        <div class="pattern-badge">${ring.pattern_type.replace(/_/g, ' ').toUpperCase()}</div>
+                    </div>
+                    <div class="risk-score">
+                        <span class="risk-label">Risk Score:</span>
+                        <span class="risk-value ${riskColor}">${ring.risk_score}%</span>
+                    </div>
+                    <div class="members-section">
+                        <span class="members-label">Members (${ring.member_accounts.length})</span>
+                        <div class="members-list">
+                            ${ring.member_accounts.map(acc => `<span class="member-badge">${acc}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        function renderAccounts() {
+            const tableBody = document.getElementById('accountsTableBody');
+            const noAccountsMsg = document.getElementById('noAccountsMessage');
+            const tableFooter = document.getElementById('tableFooter');
+
+            if (filteredAccounts.length === 0) {
+                tableBody.innerHTML = '';
+                noAccountsMsg.style.display = 'block';
+                tableFooter.style.display = 'none';
+                return;
+            }
+
+            noAccountsMsg.style.display = 'none';
+            const visible = filteredAccounts.slice(0, 50);
+
+            tableBody.innerHTML = visible.map(acc => {
+                const scoreClass = acc.suspicion_score > 90 ? 'high' : acc.suspicion_score > 70 ? 'medium' : 'low';
+                return `
+                <div class="table-row">
+                    <div><code>${acc.account_id}</code></div>
+                    <div><span class="score-badge ${scoreClass}">${acc.suspicion_score.toFixed(1)}%</span></div>
+                    <div>${acc.detected_patterns.map(p => `<span class="pattern-tag">${p.replace(/_/g, ' ')}</span>`).join('')}</div>
+                    <div><code>${acc.ring_id}</code></div>
+                </div>
+            `;
+            }).join('');
+
+            if (filteredAccounts.length > 50) {
+                tableFooter.textContent = `+${filteredAccounts.length - 50} more accounts`;
+                tableFooter.style.display = 'block';
+            } else {
+                tableFooter.style.display = 'none';
+            }
+        }
+
+        function renderStatistics() {
+            const accounts = resultsData.suspicious_accounts;
+            const totalAccounts = resultsData.summary.total_accounts_analyzed;
+            const rings = resultsData.fraud_rings;
+
+            const detectionRate = ((accounts.length / totalAccounts) * 100).toFixed(1);
+            const avgRisk = (accounts.reduce((sum, a) => sum + a.suspicion_score, 0) / accounts.length).toFixed(1);
+            const highestRiskAcc = accounts.length > 0 ? accounts[0] : null;
+
+            const patterns = {};
+            accounts.forEach(acc => {
+                acc.detected_patterns.forEach(p => {
+                    patterns[p] = (patterns[p] || 0) + 1;
+                });
+            });
+
+            const sortedPatterns = Object.entries(patterns).sort((a, b) => b[1] - a[1]);
+            const mostCommon = sortedPatterns.length > 0 ? sortedPatterns[0][0] : 'None';
+
+            document.getElementById('detectionRate').textContent = detectionRate + '%';
+            document.getElementById('avgRiskScore').textContent = avgRisk + '%';
+            document.getElementById('highestRisk').textContent = highestRiskAcc ? highestRiskAcc.account_id : 'N/A';
+            document.getElementById('commonPattern').textContent = mostCommon.replace(/_/g, ' ');
+
+            const breakdownDiv = document.getElementById('patternBreakdown');
+            breakdownDiv.innerHTML = sortedPatterns.map(([pattern, count]) => {
+                const pct = ((count / accounts.length) * 100).toFixed(1);
+                return `
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px; color: #F1EFEC;">
+                        <span style="text-transform: capitalize;">${pattern.replace(/_/g, ' ')}</span>
+                        <span>${count} (${pct}%)</span>
+                    </div>
+                    <div style="background: #123458; height: 8px; border-radius: 9999px; overflow: hidden; box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);">
+                        <div style="background: linear-gradient(90deg, #D4C9BE, #F1EFEC); height: 100%; width: ${pct}%; border-radius: 9999px;"></div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        function switchTab(tabName) {
+            tabBtns.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            document.querySelector(`.tab-content[data-tab="${tabName}"]`).classList.add('active');
+        }
+
+        function filterAccounts() {
+            const searchTerm = document.getElementById('accountsSearch').value.toLowerCase();
+            const riskLevel = document.getElementById('riskFilter').value;
+
+            filteredAccounts = resultsData.suspicious_accounts.filter(acc => {
+                const matchesSearch = acc.account_id.toLowerCase().includes(searchTerm);
+                const matchesRisk = !riskLevel ||
+                    (riskLevel === 'high' && acc.suspicion_score > 90) ||
+                    (riskLevel === 'medium' && acc.suspicion_score >= 70 && acc.suspicion_score <= 90) ||
+                    (riskLevel === 'low' && acc.suspicion_score < 70);
+                return matchesSearch && matchesRisk;
+            });
+
+            renderAccounts();
+        }
+
+        function downloadTemplate() {
+            const template = `transaction_id,sender_id,receiver_id,amount,timestamp
+TXN001,ACC_001,ACC_002,5000.00,2026-02-01 08:15:00
+TXN002,ACC_003,ACC_002,3500.00,2026-02-01 09:30:00
+TXN003,ACC_004,ACC_002,4200.00,2026-02-01 10:45:00`;
+
+            downloadFile(template, 'sample_transactions.csv', 'text/csv');
+        }
+
+        function downloadResults(format) {
+            if (format === 'json') {
+                downloadFile(JSON.stringify(resultsData, null, 2), 'fraud_detection_results.json', 'application/json');
+            } else if (format === 'csv') {
+                const csv = 'Account ID,Risk Score,Detected Patterns,Ring ID\n' +
+                    resultsData.suspicious_accounts.map(acc =>
+                        `"${acc.account_id}",${acc.suspicion_score.toFixed(1)},"${acc.detected_patterns.join('; ')}",${acc.ring_id}`
+                    ).join('\n');
+                downloadFile(csv, 'suspicious_accounts.csv', 'text/csv');
+            }
+        }
+
+        function shareResults() {
+            const text = `📊 Money Muling Detection Results\n\n` +
+                `Total Accounts: ${resultsData.summary.total_accounts_analyzed}\n` +
+                `Suspicious Accounts: ${resultsData.summary.suspicious_accounts_flagged}\n` +
+                `Fraud Rings: ${resultsData.summary.fraud_rings_detected}\n` +
+                `Processing Time: ${resultsData.summary.processing_time_seconds}s`;
+
+            if (navigator.share) {
+                navigator.share({ title: 'Fraud Detection Results', text: text });
+            } else {
+                alert(text);
+            }
+        }
+
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+
+</html>

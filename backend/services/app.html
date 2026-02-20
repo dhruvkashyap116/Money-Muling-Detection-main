@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Money Muling Detection System</title>
+</head>
+<body>
+<div class="app">
+    <!-- Header -->
+    <div class="header">
+        <h1>💰 Money Muling Detection System</h1>
+        <p>Advanced Fraud Detection Using Graph Analysis</p>
+    </div>
+
+    <div class="container">
+        <!-- Upload Section -->
+        <section class="upload-section">
+            <h2>Upload Transaction Data</h2>
+            <p class="info-text">Upload a CSV file with columns: transaction_id, sender_id, receiver_id, amount, timestamp</p>
+
+            <div class="file-input-wrapper">
+                <input type="file" accept=".csv" id="fileInput" class="file-input" />
+                <label for="fileInput" class="file-label">📁 Choose CSV File</label>
+                <span class="file-name hidden" id="fileName"></span>
+            </div>
+
+            <div class="error-message hidden" id="errorMessage"></div>
+
+            <button class="upload-button" id="uploadBtn" disabled>🚀 Analyze Transactions</button>
+
+            <div class="progress-bar-container hidden" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </section>
+
+        <!-- Results Section (hidden until results arrive) -->
+        <section class="results-section hidden" id="resultsSection">
+            <div class="results-header">
+                <h2>📊 Analysis Results</h2>
+                <button class="download-button" id="downloadBtn">⬇️ Download JSON</button>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="card-icon">🏦</div>
+                    <div class="card-content">
+                        <h3>Total Accounts</h3>
+                        <p class="card-value" id="totalAccounts">—</p>
+                    </div>
+                </div>
+                <div class="summary-card suspicious">
+                    <div class="card-icon">⚠️</div>
+                    <div class="card-content">
+                        <h3>Suspicious Accounts</h3>
+                        <p class="card-value" id="suspiciousAccounts">—</p>
+                    </div>
+                </div>
+                <div class="summary-card fraud">
+                    <div class="card-icon">🚨</div>
+                    <div class="card-content">
+                        <h3>Fraud Rings</h3>
+                        <p class="card-value" id="fraudRings">—</p>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="card-icon">⏱️</div>
+                    <div class="card-content">
+                        <h3>Processing Time</h3>
+                        <p class="card-value" id="processingTime">—</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fraud Rings -->
+            <div class="fraud-rings-section hidden" id="fraudRingsSection">
+                <h3>🔗 Detected Fraud Rings</h3>
+                <div class="rings-grid" id="ringsGrid"></div>
+            </div>
+
+            <!-- Suspicious Accounts -->
+            <div class="accounts-section hidden" id="accountsSection">
+                <h3>👤 Flagged Suspicious Accounts</h3>
+                <div class="accounts-table">
+                    <div class="table-header">
+                        <div class="col">Account ID</div>
+                        <div class="col">Score</div>
+                        <div class="col">Detected Patterns</div>
+                        <div class="col">Ring</div>
+                    </div>
+                    <div id="accountsTableBody"></div>
+                    <div class="table-footer hidden" id="tableFooter"></div>
+                </div>
+            </div>
+
+            <!-- No Results -->
+            <div class="no-results hidden" id="noResults">
+                <h3>✅ Good News!</h3>
+                <p>No suspicious activity detected in this transaction data.</p>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>Money Muling Detection System v1.0 • Powered by Graph Analysis & Network Detection</p>
+    </footer>
+</div>
+</body>
+</html>
